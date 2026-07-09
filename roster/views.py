@@ -507,5 +507,3 @@ class ActivityLogViewSet(viewsets.ReadOnlyModelViewSet):
 @permission_classes([AllowAny])
 def health_check(request):
     return Response({'status': 'healthy', 'time': timezone.now()})
-
-@api_view(['GET'])
