@@ -28,12 +28,12 @@ for t in templates:
         print(f"Created shift template: {t['name']}")
 
 # 2. Create Dummy Users & Staff Profiles
-dummy_users = [
-    {"email": "doctor.john@example.com", "name": "Dr. John Doe", "role": ClinicalRole.DOCTOR, "dept": "Emergency"},
-    {"email": "nurse.jane@example.com", "name": "Nurse Jane Smith", "role": ClinicalRole.NURSE, "dept": "ICU"},
-    {"email": "nurse.bob@example.com", "name": "Nurse Bob Wilson", "role": ClinicalRole.NURSE, "dept": "Emergency"},
-    {"email": "tech.sarah@example.com", "name": "Sarah Connor", "role": ClinicalRole.SUPPORT_STAFF, "dept": "Radiology"},
-]
+dummy_users = []
+
+for i in range(1, 11):
+    dummy_users.append({"email": f"doctor{i}@example.com", "name": f"Doctor {i}", "role": ClinicalRole.DOCTOR, "dept": "Emergency"})
+    dummy_users.append({"email": f"nurse{i}@example.com", "name": f"Nurse {i}", "role": ClinicalRole.NURSE, "dept": "ICU"})
+    dummy_users.append({"email": f"staff{i}@example.com", "name": f"Support Staff {i}", "role": ClinicalRole.SUPPORT_STAFF, "dept": "General"})
 
 staff_profiles = []
 for u in dummy_users:
