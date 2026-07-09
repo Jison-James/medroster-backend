@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-(va%94f(hdv+3gk+b2*%+
 DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
 allowed_hosts_raw = os.environ.get('ALLOWED_HOSTS', '*')
-ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_raw.split(',') if host] if allowed_hosts_raw else []
+ALLOWED_HOSTS = ['*'] # Force allow all for Render testing
 
 
 
@@ -68,11 +68,12 @@ MIDDLEWARE = [
 ]
 
 cors_allowed_origins_raw = os.environ.get('CORS_ALLOWED_ORIGINS', '')
-if cors_allowed_origins_raw:
-    CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_allowed_origins_raw.split(',') if origin]
-    CORS_ALLOW_ALL_ORIGINS = False
-else:
-    CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*\.onrender\.com$",
+    r"^http://localhost:.*$",
+]
 
 
 ROOT_URLCONF = 'medRoster.urls'
