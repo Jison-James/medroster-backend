@@ -30,7 +30,7 @@ for t in templates:
 # 2. Create Dummy Users & Staff Profiles
 dummy_users = []
 
-for i in range(1, 11):
+for i in range(1, 16):
     dummy_users.append({"email": f"doctor{i}@example.com", "name": f"Doctor {i}", "role": ClinicalRole.DOCTOR, "dept": "Emergency"})
     dummy_users.append({"email": f"nurse{i}@example.com", "name": f"Nurse {i}", "role": ClinicalRole.NURSE, "dept": "ICU"})
     dummy_users.append({"email": f"staff{i}@example.com", "name": f"Support Staff {i}", "role": ClinicalRole.SUPPORT_STAFF, "dept": "General"})
