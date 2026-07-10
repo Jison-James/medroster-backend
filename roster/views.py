@@ -507,3 +507,86 @@ class ActivityLogViewSet(viewsets.ReadOnlyModelViewSet):
 @permission_classes([AllowAny])
 def health_check(request):
     return Response({'status': 'healthy', 'time': timezone.now()})
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def seed_data(request):
+    """
+    Creates dummy staff members in the database.
+    Safe to call multiple times - uses unique emails with timestamps.
+    """
+    from roster.models import StaffProfile, Availability
+
+    dummy_staff = [
+        {"name": "Dr. Sarah Jenkins", "email_prefix": "sarah", "phone": "555-0101", "role": "Doctor", "department": "Cardiology", "employment_type": "Full-time"},
+        {"name": "Dr. Michael Chen", "email_prefix": "michael", "phone": "555-0102", "role": "Doctor", "department": "Neurology", "employment_type": "Full-time"},
+        {"name": "Dr. Aisha Patel", "email_prefix": "aisha", "phone": "555-0103", "role": "Doctor", "department": "Orthopedics", "employment_type": "Full-time"},
+        {"name": "Nurse Emily Davis", "email_prefix": "emily", "phone": "555-0201", "role": "Nurse", "department": "Pediatrics", "employment_type": "Full-time"},
+        {"name": "Nurse James Wilson", "email_prefix": "james", "phone": "555-0202", "role": "Nurse", "department": "General Ward", "employment_type": "Part-time"},
+        {"name": "Nurse Priya Sharma", "email_prefix": "priya", "phone": "555-0203", "role": "Nurse", "department": "ICU", "employment_type": "Full-time"},
+        {"name": "Nurse Carlos Rivera", "email_prefix": "carlos", "phone": "555-0204", "role": "Nurse", "department": "Emergency", "employment_type": "Full-time"},
+        {"name": "Tech Robert Taylor", "email_prefix": "robert", "phone": "555-0301", "role": "Support Staff", "department": "Radiology", "employment_type": "Full-time"},
+        {"name": "Tech Lisa Nguyen", "email_prefix": "lisa", "phone": "555-0302", "role": "Support Staff", "department": "Lab", "employment_type": "Part-time"},
+        {"name": "Tech David Kim", "email_prefix": "david", "phone": "555-0303", "role": "Support Staff", "department": "Pharmacy", "employment_type": "Full-time"},
+    ]
+
+    import time
+    ts = int(time.time())
+    created = []
+
+    for i, d in enumerate(dummy_staff):
+        unique_email = f"{d['email_prefix']}{ts}{i}@hospital.com"
+        unique_username = f"{d['email_prefix']}{ts}{i}"
+
+        user = User.objects.create_user(
+            username=unique_username,
+            email=unique_email,
+            password="staff123",
+            full_name=d["name"],
+            phone=d["phone"],
+            role="staff",
+        )
+
+        # Update the auto-created StaffProfile
+        sp = user.staff_profile
+        sp.role = d["role"]
+        sp.department = d["department"]
+        sp.employment_type = d["employment_type"]
+        sp.status = "Active"
+        sp.save()
+
+        # Create availability
+        Availability.objects.create(
+            staff=sp,
+            available_days=["Mon", "Tue", "Wed", "Thu", "Fri"],
+            preferred_shift="morning",
+            preferred_days_off=["Sat", "Sun"],
+        )
+
+        created.append({
+            "id": str(user.id),
+            "name": d["name"],
+            "email": unique_email,
+        })
+
+    # Also seed the manager account if it doesn't exist
+    manager_email = "manager@gmail.com"
+    if not User.objects.filter(email=manager_email).exists():
+        manager = User.objects.create_user(
+            username="manager",
+            email=manager_email,
+            password="medroster123",
+            full_name="Manager",
+            role="manager",
+        )
+        created.append({
+            "id": str(manager.id),
+            "name": "Manager",
+            "email": manager_email,
+        })
+
+    return Response({
+        "message": f"Successfully created {len(created)} records.",
+        "created": created,
+    }, status=status.HTTP_201_CREATED)

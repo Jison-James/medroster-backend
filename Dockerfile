@@ -23,4 +23,4 @@ COPY . /app/
 EXPOSE 8000
 
 # Start server
-CMD sh -c "python seed_admin.py && python manage.py runserver 0.0.0.0:8000"
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
