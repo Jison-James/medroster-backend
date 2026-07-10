@@ -516,110 +516,120 @@ def seed_data(request):
     Creates dummy staff members in the database.
     Safe to call multiple times - uses unique emails with timestamps.
     """
-    from roster.models import StaffProfile, Availability
-
-    dummy_staff = [
-        # --- Doctors (13) ---
-        {"name": "Dr. Sarah Jenkins", "email_prefix": "sarah", "phone": "555-0101", "role": "Doctor", "department": "Cardiology", "employment_type": "Full-time"},
-        {"name": "Dr. Michael Chen", "email_prefix": "michael", "phone": "555-0102", "role": "Doctor", "department": "Neurology", "employment_type": "Full-time"},
-        {"name": "Dr. Aisha Patel", "email_prefix": "aisha", "phone": "555-0103", "role": "Doctor", "department": "Orthopedics", "employment_type": "Full-time"},
-        {"name": "Dr. William Grant", "email_prefix": "william", "phone": "555-0104", "role": "Doctor", "department": "Oncology", "employment_type": "Full-time"},
-        {"name": "Dr. Fatima Al-Rashid", "email_prefix": "fatima", "phone": "555-0105", "role": "Doctor", "department": "Pediatrics", "employment_type": "Full-time"},
-        {"name": "Dr. Rajesh Kumar", "email_prefix": "rajesh", "phone": "555-0106", "role": "Doctor", "department": "General Surgery", "employment_type": "Full-time"},
-        {"name": "Dr. Olivia Martinez", "email_prefix": "olivia", "phone": "555-0107", "role": "Doctor", "department": "Dermatology", "employment_type": "Part-time"},
-        {"name": "Dr. James O'Brien", "email_prefix": "jamesd", "phone": "555-0108", "role": "Doctor", "department": "Emergency", "employment_type": "Full-time"},
-        {"name": "Dr. Mei Lin", "email_prefix": "meilin", "phone": "555-0109", "role": "Doctor", "department": "Gastroenterology", "employment_type": "Full-time"},
-        {"name": "Dr. Daniel Thompson", "email_prefix": "daniel", "phone": "555-0110", "role": "Doctor", "department": "Pulmonology", "employment_type": "Full-time"},
-        {"name": "Dr. Ananya Reddy", "email_prefix": "ananya", "phone": "555-0111", "role": "Doctor", "department": "Endocrinology", "employment_type": "Part-time"},
-        {"name": "Dr. Hassan Ahmed", "email_prefix": "hassan", "phone": "555-0112", "role": "Doctor", "department": "Urology", "employment_type": "Full-time"},
-        {"name": "Dr. Sophia Lee", "email_prefix": "sophia", "phone": "555-0113", "role": "Doctor", "department": "ICU", "employment_type": "Full-time"},
-        # --- Nurses (14) ---
-        {"name": "Nurse Emily Davis", "email_prefix": "emily", "phone": "555-0201", "role": "Nurse", "department": "Pediatrics", "employment_type": "Full-time"},
-        {"name": "Nurse James Wilson", "email_prefix": "james", "phone": "555-0202", "role": "Nurse", "department": "General Ward", "employment_type": "Part-time"},
-        {"name": "Nurse Priya Sharma", "email_prefix": "priya", "phone": "555-0203", "role": "Nurse", "department": "ICU", "employment_type": "Full-time"},
-        {"name": "Nurse Carlos Rivera", "email_prefix": "carlos", "phone": "555-0204", "role": "Nurse", "department": "Emergency", "employment_type": "Full-time"},
-        {"name": "Nurse Grace Okafor", "email_prefix": "grace", "phone": "555-0205", "role": "Nurse", "department": "Oncology", "employment_type": "Full-time"},
-        {"name": "Nurse Hannah Brooks", "email_prefix": "hannah", "phone": "555-0206", "role": "Nurse", "department": "Cardiology", "employment_type": "Full-time"},
-        {"name": "Nurse Kevin Tran", "email_prefix": "kevin", "phone": "555-0207", "role": "Nurse", "department": "Neurology", "employment_type": "Part-time"},
-        {"name": "Nurse Maria Santos", "email_prefix": "maria", "phone": "555-0208", "role": "Nurse", "department": "Orthopedics", "employment_type": "Full-time"},
-        {"name": "Nurse David Park", "email_prefix": "davidn", "phone": "555-0209", "role": "Nurse", "department": "General Surgery", "employment_type": "Full-time"},
-        {"name": "Nurse Rachel Green", "email_prefix": "rachel", "phone": "555-0210", "role": "Nurse", "department": "Dermatology", "employment_type": "Full-time"},
-        {"name": "Nurse Samuel Osei", "email_prefix": "samuel", "phone": "555-0211", "role": "Nurse", "department": "Pulmonology", "employment_type": "Part-time"},
-        {"name": "Nurse Laura Bennett", "email_prefix": "laura", "phone": "555-0212", "role": "Nurse", "department": "Gastroenterology", "employment_type": "Full-time"},
-        {"name": "Nurse Thomas Wright", "email_prefix": "thomas", "phone": "555-0213", "role": "Nurse", "department": "Endocrinology", "employment_type": "Full-time"},
-        {"name": "Nurse Chloe Adams", "email_prefix": "chloe", "phone": "555-0214", "role": "Nurse", "department": "Urology", "employment_type": "Full-time"},
-        # --- Support Staff (13) ---
-        {"name": "Tech Robert Taylor", "email_prefix": "robert", "phone": "555-0301", "role": "Support Staff", "department": "Radiology", "employment_type": "Full-time"},
-        {"name": "Tech Lisa Nguyen", "email_prefix": "lisa", "phone": "555-0302", "role": "Support Staff", "department": "Lab", "employment_type": "Part-time"},
-        {"name": "Tech David Kim", "email_prefix": "david", "phone": "555-0303", "role": "Support Staff", "department": "Pharmacy", "employment_type": "Full-time"},
-        {"name": "Tech Anna Petrov", "email_prefix": "anna", "phone": "555-0304", "role": "Support Staff", "department": "Blood Bank", "employment_type": "Full-time"},
-        {"name": "Tech Marcus Brown", "email_prefix": "marcus", "phone": "555-0305", "role": "Support Staff", "department": "Housekeeping", "employment_type": "Full-time"},
-        {"name": "Tech Yuki Tanaka", "email_prefix": "yuki", "phone": "555-0306", "role": "Support Staff", "department": "Medical Records", "employment_type": "Part-time"},
-        {"name": "Tech Benjamin Cole", "email_prefix": "benjamin", "phone": "555-0307", "role": "Support Staff", "department": "Sterilization", "employment_type": "Full-time"},
-        {"name": "Tech Deepa Nair", "email_prefix": "deepa", "phone": "555-0308", "role": "Support Staff", "department": "Dietary", "employment_type": "Full-time"},
-        {"name": "Tech Jason Miller", "email_prefix": "jason", "phone": "555-0309", "role": "Support Staff", "department": "Transport", "employment_type": "Full-time"},
-        {"name": "Tech Zara Ibrahim", "email_prefix": "zara", "phone": "555-0310", "role": "Support Staff", "department": "Biomedical", "employment_type": "Part-time"},
-        {"name": "Tech Patrick Murphy", "email_prefix": "patrick", "phone": "555-0311", "role": "Support Staff", "department": "IT Support", "employment_type": "Full-time"},
-        {"name": "Tech Nadia Volkov", "email_prefix": "nadia", "phone": "555-0312", "role": "Support Staff", "department": "Security", "employment_type": "Full-time"},
-        {"name": "Tech Ryan Foster", "email_prefix": "ryan", "phone": "555-0313", "role": "Support Staff", "department": "Maintenance", "employment_type": "Full-time"},
-    ]
-
     import time
-    ts = int(time.time())
-    created = []
+    import traceback
 
-    for i, d in enumerate(dummy_staff):
-        unique_email = f"{d['email_prefix']}{ts}{i}@hospital.com"
-        unique_username = f"{d['email_prefix']}{ts}{i}"
+    try:
+        from roster.models import StaffProfile, Availability
 
-        user = User.objects.create_user(
-            username=unique_username,
-            email=unique_email,
-            password="staff123",
-            full_name=d["name"],
-            phone=d["phone"],
-            role="staff",
-        )
+        dummy_staff = [
+            # --- Doctors (13) ---
+            {"name": "Dr. Sarah Jenkins", "email_prefix": "sarah", "phone": "555-0101", "role": "Doctor", "department": "Cardiology", "employment_type": "Full-time"},
+            {"name": "Dr. Michael Chen", "email_prefix": "michael", "phone": "555-0102", "role": "Doctor", "department": "Neurology", "employment_type": "Full-time"},
+            {"name": "Dr. Aisha Patel", "email_prefix": "aisha", "phone": "555-0103", "role": "Doctor", "department": "Orthopedics", "employment_type": "Full-time"},
+            {"name": "Dr. William Grant", "email_prefix": "william", "phone": "555-0104", "role": "Doctor", "department": "Oncology", "employment_type": "Full-time"},
+            {"name": "Dr. Fatima Al-Rashid", "email_prefix": "fatima", "phone": "555-0105", "role": "Doctor", "department": "Pediatrics", "employment_type": "Full-time"},
+            {"name": "Dr. Rajesh Kumar", "email_prefix": "rajesh", "phone": "555-0106", "role": "Doctor", "department": "General Surgery", "employment_type": "Full-time"},
+            {"name": "Dr. Olivia Martinez", "email_prefix": "olivia", "phone": "555-0107", "role": "Doctor", "department": "Dermatology", "employment_type": "Part-time"},
+            {"name": "Dr. James OBrien", "email_prefix": "jamesd", "phone": "555-0108", "role": "Doctor", "department": "Emergency", "employment_type": "Full-time"},
+            {"name": "Dr. Mei Lin", "email_prefix": "meilin", "phone": "555-0109", "role": "Doctor", "department": "Gastroenterology", "employment_type": "Full-time"},
+            {"name": "Dr. Daniel Thompson", "email_prefix": "daniel", "phone": "555-0110", "role": "Doctor", "department": "Pulmonology", "employment_type": "Full-time"},
+            {"name": "Dr. Ananya Reddy", "email_prefix": "ananya", "phone": "555-0111", "role": "Doctor", "department": "Endocrinology", "employment_type": "Part-time"},
+            {"name": "Dr. Hassan Ahmed", "email_prefix": "hassan", "phone": "555-0112", "role": "Doctor", "department": "Urology", "employment_type": "Full-time"},
+            {"name": "Dr. Sophia Lee", "email_prefix": "sophia", "phone": "555-0113", "role": "Doctor", "department": "ICU", "employment_type": "Full-time"},
+            # --- Nurses (14) ---
+            {"name": "Nurse Emily Davis", "email_prefix": "emily", "phone": "555-0201", "role": "Nurse", "department": "Pediatrics", "employment_type": "Full-time"},
+            {"name": "Nurse James Wilson", "email_prefix": "james", "phone": "555-0202", "role": "Nurse", "department": "General Ward", "employment_type": "Part-time"},
+            {"name": "Nurse Priya Sharma", "email_prefix": "priya", "phone": "555-0203", "role": "Nurse", "department": "ICU", "employment_type": "Full-time"},
+            {"name": "Nurse Carlos Rivera", "email_prefix": "carlos", "phone": "555-0204", "role": "Nurse", "department": "Emergency", "employment_type": "Full-time"},
+            {"name": "Nurse Grace Okafor", "email_prefix": "grace", "phone": "555-0205", "role": "Nurse", "department": "Oncology", "employment_type": "Full-time"},
+            {"name": "Nurse Hannah Brooks", "email_prefix": "hannah", "phone": "555-0206", "role": "Nurse", "department": "Cardiology", "employment_type": "Full-time"},
+            {"name": "Nurse Kevin Tran", "email_prefix": "kevin", "phone": "555-0207", "role": "Nurse", "department": "Neurology", "employment_type": "Part-time"},
+            {"name": "Nurse Maria Santos", "email_prefix": "maria", "phone": "555-0208", "role": "Nurse", "department": "Orthopedics", "employment_type": "Full-time"},
+            {"name": "Nurse David Park", "email_prefix": "davidn", "phone": "555-0209", "role": "Nurse", "department": "General Surgery", "employment_type": "Full-time"},
+            {"name": "Nurse Rachel Green", "email_prefix": "rachel", "phone": "555-0210", "role": "Nurse", "department": "Dermatology", "employment_type": "Full-time"},
+            {"name": "Nurse Samuel Osei", "email_prefix": "samuel", "phone": "555-0211", "role": "Nurse", "department": "Pulmonology", "employment_type": "Part-time"},
+            {"name": "Nurse Laura Bennett", "email_prefix": "laura", "phone": "555-0212", "role": "Nurse", "department": "Gastroenterology", "employment_type": "Full-time"},
+            {"name": "Nurse Thomas Wright", "email_prefix": "thomas", "phone": "555-0213", "role": "Nurse", "department": "Endocrinology", "employment_type": "Full-time"},
+            {"name": "Nurse Chloe Adams", "email_prefix": "chloe", "phone": "555-0214", "role": "Nurse", "department": "Urology", "employment_type": "Full-time"},
+            # --- Support Staff (13) ---
+            {"name": "Tech Robert Taylor", "email_prefix": "robert", "phone": "555-0301", "role": "Support Staff", "department": "Radiology", "employment_type": "Full-time"},
+            {"name": "Tech Lisa Nguyen", "email_prefix": "lisa", "phone": "555-0302", "role": "Support Staff", "department": "Lab", "employment_type": "Part-time"},
+            {"name": "Tech David Kim", "email_prefix": "david", "phone": "555-0303", "role": "Support Staff", "department": "Pharmacy", "employment_type": "Full-time"},
+            {"name": "Tech Anna Petrov", "email_prefix": "anna", "phone": "555-0304", "role": "Support Staff", "department": "Blood Bank", "employment_type": "Full-time"},
+            {"name": "Tech Marcus Brown", "email_prefix": "marcus", "phone": "555-0305", "role": "Support Staff", "department": "Housekeeping", "employment_type": "Full-time"},
+            {"name": "Tech Yuki Tanaka", "email_prefix": "yuki", "phone": "555-0306", "role": "Support Staff", "department": "Medical Records", "employment_type": "Part-time"},
+            {"name": "Tech Benjamin Cole", "email_prefix": "benjamin", "phone": "555-0307", "role": "Support Staff", "department": "Sterilization", "employment_type": "Full-time"},
+            {"name": "Tech Deepa Nair", "email_prefix": "deepa", "phone": "555-0308", "role": "Support Staff", "department": "Dietary", "employment_type": "Full-time"},
+            {"name": "Tech Jason Miller", "email_prefix": "jason", "phone": "555-0309", "role": "Support Staff", "department": "Transport", "employment_type": "Full-time"},
+            {"name": "Tech Zara Ibrahim", "email_prefix": "zara", "phone": "555-0310", "role": "Support Staff", "department": "Biomedical", "employment_type": "Part-time"},
+            {"name": "Tech Patrick Murphy", "email_prefix": "patrick", "phone": "555-0311", "role": "Support Staff", "department": "IT Support", "employment_type": "Full-time"},
+            {"name": "Tech Nadia Volkov", "email_prefix": "nadia", "phone": "555-0312", "role": "Support Staff", "department": "Security", "employment_type": "Full-time"},
+            {"name": "Tech Ryan Foster", "email_prefix": "ryan", "phone": "555-0313", "role": "Support Staff", "department": "Maintenance", "employment_type": "Full-time"},
+        ]
 
-        # Update the auto-created StaffProfile
-        sp = user.staff_profile
-        sp.role = d["role"]
-        sp.department = d["department"]
-        sp.employment_type = d["employment_type"]
-        sp.status = "Active"
-        sp.save()
+        ts = int(time.time())
+        created = []
 
-        # Create availability
-        Availability.objects.create(
-            staff=sp,
-            available_days=["Mon", "Tue", "Wed", "Thu", "Fri"],
-            preferred_shift="morning",
-            preferred_days_off=["Sat", "Sun"],
-        )
+        for i, d in enumerate(dummy_staff):
+            unique_email = f"{d['email_prefix']}{ts}{i}@hospital.com"
+            unique_username = f"{d['email_prefix']}{ts}{i}"
 
-        created.append({
-            "id": str(user.id),
-            "name": d["name"],
-            "email": unique_email,
-        })
+            user = User.objects.create_user(
+                username=unique_username,
+                email=unique_email,
+                password="staff123",
+                full_name=d["name"],
+                phone=d["phone"],
+                role="staff",
+            )
 
-    # Also seed the manager account if it doesn't exist
-    manager_email = "manager@gmail.com"
-    if not User.objects.filter(email=manager_email).exists():
-        manager = User.objects.create_user(
-            username="manager",
-            email=manager_email,
-            password="medroster123",
-            full_name="Manager",
-            role="manager",
-        )
-        created.append({
-            "id": str(manager.id),
-            "name": "Manager",
-            "email": manager_email,
-        })
+            # Update the auto-created StaffProfile
+            sp = user.staff_profile
+            sp.role = d["role"]
+            sp.department = d["department"]
+            sp.employment_type = d["employment_type"]
+            sp.status = "Active"
+            sp.save()
 
-    return Response({
-        "message": f"Successfully created {len(created)} records.",
-        "created": created,
-    }, status=status.HTTP_201_CREATED)
+            # Create availability
+            Availability.objects.create(
+                staff=sp,
+                available_days=["Mon", "Tue", "Wed", "Thu", "Fri"],
+                preferred_shift="morning",
+                preferred_days_off=["Sat", "Sun"],
+            )
+
+            created.append({
+                "id": str(user.id),
+                "name": d["name"],
+                "email": unique_email,
+            })
+
+        # Also seed the manager account if it doesn't exist
+        manager_email = "manager@gmail.com"
+        if not User.objects.filter(email=manager_email).exists():
+            manager = User.objects.create_user(
+                username="manager",
+                email=manager_email,
+                password="medroster123",
+                full_name="Manager",
+                role="manager",
+            )
+            created.append({
+                "id": str(manager.id),
+                "name": "Manager",
+                "email": manager_email,
+            })
+
+        return Response({
+            "message": f"Successfully created {len(created)} records.",
+            "created": created,
+        }, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        return Response({
+            "error": str(e),
+            "traceback": traceback.format_exc(),
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
